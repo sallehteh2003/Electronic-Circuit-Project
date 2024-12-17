@@ -159,12 +159,12 @@ def Analysis_for_circuit1_PNP(VBB,RB,Beta,VCC,RC):
         return("off")
     Icollector = Beta * Ibase
     VEC = VCC - Icollector* RC
-    if VCE > 0.2 :
+    if VEC > 0.2 :
         return(("Active",Ibase,Icollector,VEC))
     else:
         Ibase = (VBB-0.8)/RB
         Icollector = (VCC - 0.2) / RC
-        VCE = 0.2
+        VEC = 0.2
         return(("Sat",Ibase,Icollector,VEC))
 
 
