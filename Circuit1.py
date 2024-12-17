@@ -3,6 +3,7 @@ import schemdraw.elements as elm
 
 
 
+
 def draw_circuit1_off(d):
     d+= elm.Dot().at((-1.5033333333333332,1.8410523547181874e-16))
     d += elm.Resistor().left().label('Rb 200kΩ')
@@ -84,3 +85,34 @@ def draw_circuit1_PNP(d):
     d += elm.Line().length(2).down().at(transistor.emitter)
     d += elm.Ground()
     return d
+
+
+def Analysis_for_circuit1_NPN(VBB,RB,Beta,VCC,RC):
+    Ibase = (VBB-0.7)/RB
+    if Ibase <= 0 :
+        return("off")
+    Icollector = Beta * Ibase
+    VCE = VCC - Icollector* RC
+    if VCE > 0.2 :
+        return(("Active",Ibase,Icollector,VCE))
+    else:
+        Ibase = (VBB-0.8)/RB
+        Icollector = (VCC - 0.2) / RC
+        VCE = 0.2
+        return(("Sat",Ibase,Icollector,VCE))
+
+def Analysis_for_circuit1_PNP(VBB,RB,Beta,VCC,RC):
+    Ibase = (VBB-0.7)/RB
+    if Ibase <= 0 :
+        return("off")
+    Icollector = Beta * Ibase
+    VEC = VCC - Icollector* RC
+    if VCE > 0.2 :
+        return(("Active",Ibase,Icollector,VEC))
+    else:
+        Ibase = (VBB-0.8)/RB
+        Icollector = (VCC - 0.2) / RC
+        VCE = 0.2
+        return(("Sat",Ibase,Icollector,VEC))
+
+
