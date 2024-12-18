@@ -20,6 +20,7 @@ def show_drawing_in_tkinter(drawing, frame_to_display):
     label.image = img_tk  # نگهداری یک مرجع به تصویر
     label.pack()
 
+
 # تنظیمات Tkinter
 root = tk.Tk()
 root.title("Circuit Drawer")
