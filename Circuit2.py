@@ -160,5 +160,35 @@ def draw_circuit2_NPN_Sat(d):
     return d
 
 
+def Analysis_for_circuit2_NPN(VBB, RB, RE, Beta, VCC, RC):
+    Ibase = (VBB-0.7)/(RB + RE*(Beta+1))
+    if Ibase <= 0:
+        return ("off")
+    Icollector = Beta * Ibase
+    VCE = VCC - Icollector * (RC + ((Beta+1)/Beta)*RE)
+    if VCE > 0.2:
+        return (("Active", Ibase, Icollector, VCE))
+    else:
+        Ibase, Icollector = symbols('Ibase,Icollector')
+        eq1 = Eq(Ibase*(RB + RE) + Icollector*RE, VBB-0.8)
+        eq2 = Eq(Ibase*RB + Icollector*(RC + RE), VCC-0.2)
+        sol = solve((eq1, eq2), (Ibase, Icollector))
+        return (("Sat", sol[Ibase], sol[Icollector], 0.2))
 
+
+def Analysis_for_circuit2_PNP(VBB, RB, RE, Beta, VCC, RC):
+    Ibase = (0.7 - VBB) / (RB + RE * (Beta + 1))
+    if Ibase >= 0:  
+        return ("off")
+    Icollector = Beta * Ibase
+    VCE = VCC - Icollector * (RC + ((Beta + 1) / Beta) * RE)
+    
+    if VCE > 0.2:
+        return ("Active", Ibase, Icollector, VCE)
+    else:
+        Ibase, Icollector = symbols('Ibase Icollector')
+        eq1 = Eq(Ibase * (RB + RE) + Icollector * RE, 0.7 - VBB)
+        eq2 = Eq(Ibase * RB + Icollector * (RC + RE), VCC - 0.2)
+        sol = solve((eq1, eq2), (Ibase, Icollector))
+        return ("Sat", sol[Ibase], sol[Icollector], 0.2)
 
