@@ -6,6 +6,7 @@ import io
 from tkinter import font, ttk
 import Circuit1  as C
 import Circuit10 as C1
+import Circuit7 as C2
 from tkinter import simpledialog
 # تابع برای نمایش رسم در Tkinter
 def show_drawing_in_tkinter(drawing, frame_to_display):
@@ -89,19 +90,31 @@ def Analysis_circuit(inputs,selected_circuit,selected_Type):
     elif selected_circuit == "Circuit 2":
         pass
         
-    elif selected_circuit == "Circuit 3":
-        pass  
+    elif selected_circuit == "Circuit 6":
+        if selected_Type == "NPN":
+                d = C2.draw_circuit7_NPN(d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1])
+                show_drawing_in_tkinter(d, frame_1)
+                result = C2.Analysis_for_circuit7_NPN(inputs["RB2"][0],inputs["RB1"][0],inputs["VCC"][0],inputs["RC"][0],inputs["RE"][0],inputs["BETA"][0])
+                d = schemdraw.Drawing()
+                d = result[1](d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1])
+        else:
+                d = C2.draw_circuit7_PNP(d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1])
+                show_drawing_in_tkinter(d, frame_1)
+                result = C2.Analysis_for_circuit7_PNP(inputs["RB2"][0],inputs["RB1"][0],inputs["VCC"][0],inputs["RC"][0],inputs["RE"][0],inputs["BETA"][0])
+                d = schemdraw.Drawing()
+                d = result[1](d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1])  
+
     elif selected_circuit == "Circuit 9":
             if selected_Type == "NPN":
                 d = C1.draw_circuit10_NPN(d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VEE"][1],inputs["RE"][1])
                 show_drawing_in_tkinter(d, frame_1)
-                result = C1.Analysis_for_circuit1_NPN(inputs["RB2"][0],inputs["RB1"][0],inputs["VEE"][0],inputs["VCC"][0],inputs["RC"][0],inputs["RE"][0],inputs["BETA"][0])
+                result = C1.Analysis_for_circuit10_NPN(inputs["RB2"][0],inputs["RB1"][0],inputs["VEE"][0],inputs["VCC"][0],inputs["RC"][0],inputs["RE"][0],inputs["BETA"][0])
                 d = schemdraw.Drawing()
                 d = result[1](d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VEE"][1],inputs["RE"][1])
             else:
                 d = C1.draw_circuit10_PNP(d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VEE"][1],inputs["RE"][1])
                 show_drawing_in_tkinter(d, frame_1)
-                result = C1.Analysis_for_circuit1_PNP(inputs["RB2"][0],inputs["RB1"][0],inputs["VEE"][0],inputs["VCC"][0],inputs["RC"][0],inputs["RE"][0],inputs["BETA"][0])
+                result = C1.Analysis_for_circuit10_PNP(inputs["RB2"][0],inputs["RB1"][0],inputs["VEE"][0],inputs["VCC"][0],inputs["RC"][0],inputs["RE"][0],inputs["BETA"][0])
                 d = schemdraw.Drawing()
                 d = result[1](d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VEE"][1],inputs["RE"][1])
     
@@ -134,8 +147,11 @@ def draw_circuit(selected_circuit,selected_Type):
         pass
         # d = C.draw_circuit1_PNP(d)
         # show_drawing_in_tkinter(d, frame_1)
-    elif selected_circuit == "Circuit 3":
-        pass  # در صورت نیاز به اضافه کردن مدارهای جدید
+    elif selected_circuit == "Circuit 6":
+        if selected_Type == "NPN":
+            d = C2.draw_circuit7_NPN(d)
+        else:
+            d = C2.draw_circuit7_PNP(d)
     elif selected_circuit == "Circuit 9":
         if selected_Type == "NPN":
             d = C1.draw_circuit10_NPN(d)
