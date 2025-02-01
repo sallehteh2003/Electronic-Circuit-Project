@@ -24,6 +24,7 @@ def draw_circuit10_PNP(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",VEE="VEE",RE="RE"
     d += elm.BatteryCell().up().label(VCC)
     d += elm.Line().length(1.5).up().at(transistor.collector)
     d += elm.Resistor().right().label(RC,'bottom')
+    return d
 
 def draw_circuit10_PNP_ACTIVE(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",VEE="VEE",RE="RE"):
     Battery = d.add( elm.BatteryCell().left().label('VEB(ACTIVE)').scale(0.7))
@@ -45,6 +46,7 @@ def draw_circuit10_PNP_ACTIVE(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",VEE="VEE",
     d += elm.BatteryCell().up().label(VCC)
     d += elm.SourceControlledI().up().label("Beta IB").at(Battery.start)
     d += elm.Resistor().right().label(RC)
+    return d
 
 def draw_circuit10_PNP_SAT(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",VEE="VEE",RE="RE"):
     Battery = d.add( elm.BatteryCell().left().label('VEB(SAT)').scale(0.7))
@@ -66,6 +68,7 @@ def draw_circuit10_PNP_SAT(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",VEE="VEE",RE=
     d += elm.BatteryCell().up().label(VCC)
     d += elm.BatteryCell().up().label("VEC(SAT)").at(Battery.start)
     d += elm.Resistor().right().label(RC)
+    return d
 
 
 def draw_circuit10_PNP_off(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",VEE="VEE",RE="RE"):
@@ -92,6 +95,7 @@ def draw_circuit10_PNP_off(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",VEE="VEE",RE=
     d += elm.Resistor().left().label(RC)
     d += elm.Line().length(2).down()
     d += elm.Dot().label("C",'right')
+    return d
 
 def draw_circuit10_NPN(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",VEE="VEE",RE="RE"):
    
@@ -117,6 +121,7 @@ def draw_circuit10_NPN(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",VEE="VEE",RE="RE"
     d += elm.Line().length(1.41).up()
     d += elm.Line().length(2).left()
     d += elm.Resistor().up().label(RC).at(transistor.collector)
+    return d
     
     
 def draw_circuit10_NPN_ACTIVE(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",VEE="VEE",RE="RE"):
@@ -139,6 +144,7 @@ def draw_circuit10_NPN_ACTIVE(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",VEE="VEE",
     d += elm.BatteryCell().up().label(VCC).reverse()
     d += elm.Resistor().left().label(RC)
     d += elm.SourceControlledI().down().label("Beta IB")
+    return d
 
 def draw_circuit10_NPN_SAT(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",VEE="VEE",RE="RE"):
     d += elm.BatteryCell().down().label(VCC)
@@ -160,6 +166,7 @@ def draw_circuit10_NPN_SAT(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",VEE="VEE",RE=
     d += elm.BatteryCell().up().label(VCC).reverse()
     d += elm.Resistor().left().label(RC)
     d += elm.BatteryCell().down().label("VCE (sat)")
+    return d
     
 def draw_circuit10_NPN_OFF(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",VEE="VEE",RE="RE"):
     d += elm.BatteryCell().down().label(VCC)
@@ -185,28 +192,29 @@ def draw_circuit10_NPN_OFF(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",VEE="VEE",RE=
     d += elm.Resistor().left().label(RC)
     d += elm.Line().length(2).down()
     d += elm.Dot().label("C",'right')
+    return d
 
 
-    def Analysis_for_circuit1_NPN(RB2,RB1,VEE,VCC,RC,RE,BETA):
-        VTH = (RB2/(RB1+RB2))*(VCC+VEE)- VEE
-        RTH = (RB1*RB2)/(RB1+RB2)
-        IB = (VEE-VTH-0.7)/(RTH+((BETA+1)*RE))
-        if IB <= 0 :
-            return((("off",0,0,VCC+VEE),draw_circuit10_NPN_OFF,"KVL 1: -VBB + (RB)*IB + VBE(ACTIVE) = 0"))
-        IC = BETA * IB
-        VCE = VCC + VEE -  (IC * ( RC + ((BETA+1) / BETA *RE)))
-        if VCE > 0.2 :
-            TEMP = "KVL 1: -VTH + (RTH)*IB + VBE(ACTIVE) + RE * (BETA + 1) * IB = 0 \n KVL 2: -VCC + RC * IC + VCE + RE * (BETA + 1/ BETA) -VEE  = 0 \n IC = BETA * IB"
-            return((("Active",IB,IC,VCE),draw_circuit10_NPN_ACTIVE,TEMP))
-        else:
-            IC, IB = symbols('IC IB')
-            eq1 = Eq( -VTH + RTH * IB + 0.8 + (IC + IB) * RE -VEE , 0 )
-            eq2 = Eq( -VCC + IC * RC + 0.2 + RE * (IC + IB) , 0 )
-            solution = solve((eq1, eq2), (IC ,IB))
-            TEMP = "KVL 1: -VTH + (RTH)*IB + VBE(sat) + RE * IE - VEE = 0 \n KVL 2: -VCC + IC *RC + VCE(SAT) + IE * RE   \n IE = IC + IB"
-            return((("Sat",solution[IC],IC[IB],0.2),draw_circuit10_NPN_SAT,TEMP))
+def Analysis_for_circuit1_NPN(RB2,RB1,VEE,VCC,RC,RE,BETA):
+    VTH = (RB2/(RB1+RB2))*(VCC+VEE)- VEE
+    RTH = (RB1*RB2)/(RB1+RB2)
+    IB = (VEE-VTH-0.7)/(RTH+((BETA+1)*RE))
+    if IB <= 0 :
+        return((("off",0,0,VCC+VEE),draw_circuit10_NPN_OFF,"KVL 1: -VBB + (RB)*IB + VBE(ACTIVE) = 0"))
+    IC = BETA * IB
+    VCE = VCC + VEE -  (IC * ( RC + ((BETA+1) / BETA *RE)))
+    if VCE > 0.2 :
+        TEMP = "KVL 1: -VTH + (RTH)*IB + VBE(ACTIVE) + RE * (BETA + 1) * IB = 0 \n KVL 2: -VCC + RC * IC + VCE + RE * (BETA + 1/ BETA) -VEE  = 0 \n IC = BETA * IB"
+        return((("Active",IB,IC,VCE),draw_circuit10_NPN_ACTIVE,TEMP))
+    else:
+        IC, IB = symbols('IC IB')
+        eq1 = Eq( -VTH + RTH * IB + 0.8 + (IC + IB) * RE -VEE , 0 )
+        eq2 = Eq( -VCC + IC * RC + 0.2 + RE * (IC + IB) , 0 )
+        solution = solve((eq1, eq2), (IC ,IB))
+        TEMP = "KVL 1: -VTH + (RTH)*IB + VBE(sat) + RE * IE - VEE = 0 \n KVL 2: -VCC + IC *RC + VCE(SAT) + IE * RE   \n IE = IC + IB"
+        return((("Sat",solution[IC],IC[IB],0.2),draw_circuit10_NPN_SAT,TEMP))
 
-    def Analysis_for_circuit1_PNP(RB2,RB1,VEE,VCC,RC,RE,BETA):
+def Analysis_for_circuit1_PNP(RB2,RB1,VEE,VCC,RC,RE,BETA):
         VTH = (RB2/(RB1+RB2))*( (-1 * VCC) - VEE) + VEE
         RTH = (RB1*RB2)/(RB1+RB2)
         IB = (VEE-VTH-0.7)/(RTH+((BETA+1)*RE))

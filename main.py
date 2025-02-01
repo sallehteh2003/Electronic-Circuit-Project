@@ -4,7 +4,8 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import io
 from tkinter import font, ttk
-import Circuit1 as C
+import Circuit1  as C
+import Circuit10 as C1
 from tkinter import simpledialog
 # تابع برای نمایش رسم در Tkinter
 def show_drawing_in_tkinter(drawing, frame_to_display):
@@ -55,7 +56,7 @@ frame_top.grid_rowconfigure(1, weight=1)
 frame = tk.Frame(root)
 frame.pack()
 
-Circuit_inputs= {"Circuit 1":[5,"VCC","VBB","RB","RC","BETA"]}
+Circuit_inputs= {"Circuit 1":[5,"VCC","VBB","RB","RC","BETA"],"Circuit 9":[7,"VEE","VCC","RB1","RC","BETA","RE","RB2"]}
 
 def clean_frames():
     for widget in frame_1.winfo_children():
@@ -87,13 +88,22 @@ def Analysis_circuit(inputs,selected_circuit,selected_Type):
         
     elif selected_circuit == "Circuit 2":
         pass
-        # d = C.draw_circuit1_PNP(d)
-        # show_drawing_in_tkinter(d, frame_1)
+        
     elif selected_circuit == "Circuit 3":
-        pass  # در صورت نیاز به اضافه کردن مدارهای جدید
-    elif selected_circuit == "Circuit 18":
-        pass  # در صورت نیاز به اضافه کردن مدارهای جدید
-
+        pass  
+    elif selected_circuit == "Circuit 9":
+            if selected_Type == "NPN":
+                d = C1.draw_circuit10_NPN(d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VEE"][1],inputs["RE"][1])
+                show_drawing_in_tkinter(d, frame_1)
+                result = C1.Analysis_for_circuit1_NPN(inputs["RB2"][0],inputs["RB1"][0],inputs["VEE"][0],inputs["VCC"][0],inputs["RC"][0],inputs["RE"][0],inputs["BETA"][0])
+                d = schemdraw.Drawing()
+                d = result[1](d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VEE"][1],inputs["RE"][1])
+            else:
+                d = C1.draw_circuit10_PNP(d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VEE"][1],inputs["RE"][1])
+                show_drawing_in_tkinter(d, frame_1)
+                result = C1.Analysis_for_circuit1_PNP(inputs["RB2"][0],inputs["RB1"][0],inputs["VEE"][0],inputs["VCC"][0],inputs["RC"][0],inputs["RE"][0],inputs["BETA"][0])
+                d = schemdraw.Drawing()
+                d = result[1](d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VEE"][1],inputs["RE"][1])
     
     show_drawing_in_tkinter(d, frame_2)
     text=""
@@ -116,19 +126,22 @@ def draw_circuit(selected_circuit,selected_Type):
     label = tk.Label(frame_1, text= selected_circuit, font=("Helvetica", 11,'bold'))
     label.pack(padx=10, pady=10)
     if selected_circuit == "Circuit 1":
-        if(selected_Type == "NPN"):
+        if selected_Type == "NPN":
             d = C.draw_circuit1_NPN(d)
         else:
             d = C.draw_circuit1_PNP(d)
-        show_drawing_in_tkinter(d, frame_1)  # نمایش مدار در قسمت بالا چپ
     elif selected_circuit == "Circuit 2":
         pass
         # d = C.draw_circuit1_PNP(d)
         # show_drawing_in_tkinter(d, frame_1)
     elif selected_circuit == "Circuit 3":
         pass  # در صورت نیاز به اضافه کردن مدارهای جدید
-    elif selected_circuit == "Circuit 18":
-        pass  # در صورت نیاز به اضافه کردن مدارهای جدید
+    elif selected_circuit == "Circuit 9":
+        if selected_Type == "NPN":
+            d = C1.draw_circuit10_NPN(d)
+        else:
+            d = C1.draw_circuit10_PNP(d)
+    show_drawing_in_tkinter(d, frame_1)
     
 def open_input_window(selected_circuit,selected_Type):
     # ایجاد یک پنجره جدید
