@@ -3,7 +3,7 @@ import schemdraw.elements as elm
 from sympy import symbols, Eq, solve
 
 
-def draw_circuit2_PNP_off(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
+def draw_circuit2_PNP_off(d, VBB="VBB", Rb="Rb", VCC="VCC", Rc="Rc", Re="Re"):
     d += elm.Dot().at((-1.5033333333333332, 1.8410523547181874e-16))
     d += elm.Resistor().left().label(Rb)
     d += elm.SourceV().down().label(VBB)
@@ -23,7 +23,7 @@ def draw_circuit2_PNP_off(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
     return d
 
 
-def draw_circuit2_PNP_Active(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
+def draw_circuit2_PNP_Active(d, VBB="VBB", Rb="Rb", VCC="VCC", Rc="Rc", Re="Re"):
     d += elm.Dot().at((-1.5033333333333332, 1.8410523547181874e-16))
     d += elm.BatteryCell().left().reverse().label('Vbe')
     d += elm.Resistor().left().label(Rb)
@@ -44,7 +44,7 @@ def draw_circuit2_PNP_Active(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
     return d
 
 
-def draw_circuit2_PNP_Sat(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
+def draw_circuit2_PNP_Sat(d, VBB="VBB", Rb="Rb", VCC="VCC", Rc="Rc", Re="Re"):
     d += elm.Dot().at((-1.5033333333333332, 1.8410523547181874e-16))
     d += elm.BatteryCell().left().reverse().label('Vbe')
     d += elm.Resistor().left().label(Rb)
@@ -65,7 +65,7 @@ def draw_circuit2_PNP_Sat(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
     return d
 
 
-def draw_circuit2_NPN(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
+def draw_circuit2_NPN(d, VBB="VBB", Rb="Rb", VCC="VCC", Rc="Rc", Re="Re"):
     d += elm.SourceV().up().label(VBB)
     d += elm.Resistor().right().label(Rb)
     transistor = d.add(elm.BjtNpn(circle=True).label('Q1').right())
@@ -82,7 +82,7 @@ def draw_circuit2_NPN(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
     return d
 
 
-def draw_circuit2_PNP(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
+def draw_circuit2_PNP(d, VBB="VBB", Rb="Rb", VCC="VCC", Rc="Rc", Re="Re"):
     transistor = d.add(elm.BjtPnp2(circle=True).label('Q1').reverse())
     d += elm.Resistor().left().label(Rb).at(transistor.base)
     d += elm.SourceV().down().label(VBB)
@@ -98,7 +98,7 @@ def draw_circuit2_PNP(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
     return d
 
 
-def draw_circuit2_NPN_off(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
+def draw_circuit2_NPN_off(d, VBB="VBB", Rb="Rb", VCC="VCC", Rc="Rc", Re="Re"):
     d += elm.Dot().at((-1.5033333333333332, 1.8410523547181874e-16))
     d += elm.Resistor().left().label(Rb)
     d += elm.SourceV().down().reverse().label(VBB)
@@ -118,7 +118,7 @@ def draw_circuit2_NPN_off(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
     return d
 
 
-def draw_circuit2_NPN_Active(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
+def draw_circuit2_NPN_Active(d, VBB="VBB", Rb="Rb", VCC="VCC", Rc="Rc", Re="Re"):
     d += elm.Dot().at((-1.5033333333333332, 1.8410523547181874e-16))
     d += elm.BatteryCell().left().reverse().label('Vbe')
     d += elm.Resistor().left().label(Rb)
@@ -139,7 +139,7 @@ def draw_circuit2_NPN_Active(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
     return d
 
 
-def draw_circuit2_NPN_Sat(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
+def draw_circuit2_NPN_Sat(d, VBB="VBB", Rb="Rb", VCC="VCC", Rc="Rc", Re="Re"):
     d += elm.Dot().at((-1.5033333333333332, 1.8410523547181874e-16))
     d += elm.BatteryCell().left().reverse().label('Vbe')
     d += elm.Resistor().left().label(Rb)
@@ -163,26 +163,30 @@ def draw_circuit2_NPN_Sat(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
 def Analysis_for_circuit2_NPN(VBB, RB, RE, Beta, VCC, RC):
     Ibase = (VBB-0.7)/(RB + RE*(Beta+1))
     if Ibase <= 0:
-        return ("off")
+        return ((("off", 0, 0, VCC), draw_circuit2_NPN_off, "KVL 1: -VBB + (RB)*IB + (RE)*(BETA+1)*IB + VBE(ACTIVE) = 0"))
     Icollector = Beta * Ibase
     VCE = VCC - Icollector * (RC + ((Beta+1)/Beta)*RE)
     if VCE > 0.2:
-        return (("Active", Ibase, Icollector, VCE))
+        TEMP = "KVL 1: -VBB + (RB)*IB + VBE(ACTIVE) +(RE)*(BETA+1)*IB  = 0\n" + \
+            "KVL 2: -VCC + (RC)*IC +  VCE  + (RE)*IE = 0 \n IC=BETA*IB"
+        return ((("Active", Ibase, Icollector, VCE), draw_circuit2_NPN_Active, TEMP))
     else:
         Ibase, Icollector = symbols('Ibase,Icollector')
         eq1 = Eq(Ibase*(RB + RE) + Icollector*RE, VBB-0.8)
         eq2 = Eq(Ibase*RB + Icollector*(RC + RE), VCC-0.2)
         sol = solve((eq1, eq2), (Ibase, Icollector))
-        return (("Sat", sol[Ibase], sol[Icollector], 0.2))
+        TEMP = "KVL 1: -VBB + (RB)*IB  + VBE(SAT) + (RE)*IE = 0\n" + \
+            "KVL 2: -VCC - (RC)*IC +  VCE  + (RE)*IE = 0 \n IE=IB + IC"
+        return ((("Sat", sol[Ibase], sol[Icollector], 0.2), draw_circuit2_NPN_Sat, TEMP))
 
 
 def Analysis_for_circuit2_PNP(VBB, RB, RE, Beta, VCC, RC):
     Ibase = (0.7 - VBB) / (RB + RE * (Beta + 1))
-    if Ibase >= 0:  
+    if Ibase >= 0:
         return ("off")
     Icollector = Beta * Ibase
     VCE = VCC - Icollector * (RC + ((Beta + 1) / Beta) * RE)
-    
+
     if VCE > 0.2:
         return ("Active", Ibase, Icollector, VCE)
     else:
@@ -191,4 +195,3 @@ def Analysis_for_circuit2_PNP(VBB, RB, RE, Beta, VCC, RC):
         eq2 = Eq(Ibase * RB + Icollector * (RC + RE), VCC - 0.2)
         sol = solve((eq1, eq2), (Ibase, Icollector))
         return ("Sat", sol[Ibase], sol[Icollector], 0.2)
-
