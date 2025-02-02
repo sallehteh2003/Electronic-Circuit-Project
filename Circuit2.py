@@ -167,7 +167,7 @@ def Analysis_for_circuit2_NPN(VBB, RB, RE, Beta, VCC, RC):
     Icollector = Beta * Ibase
     VCE = VCC - Icollector * (RC + ((Beta+1)/Beta)*RE)
     if VCE > 0.2:
-        TEMP = "KVL 1: -VBB + (RB)*IB + VBE(ACTIVE) +(RE)*(BETA+1)*IB  = 0\n" + \
+        TEMP = "KVL 1: -VBB + (RB)*IB + VBE(ACTIVE) +(RE)*IE  = 0\n" + \
             "KVL 2: -VCC + (RC)*IC +  VCE  + (RE)*IE = 0 \n IC=BETA*IB"
         return ((("Active", Ibase, Icollector, VCE), draw_circuit2_NPN_Active, TEMP))
     else:
@@ -176,7 +176,7 @@ def Analysis_for_circuit2_NPN(VBB, RB, RE, Beta, VCC, RC):
         eq2 = Eq(Ibase*RB + Icollector*(RC + RE), VCC-0.2)
         sol = solve((eq1, eq2), (Ibase, Icollector))
         TEMP = "KVL 1: -VBB + (RB)*IB  + VBE(SAT) + (RE)*IE = 0\n" + \
-            "KVL 2: -VCC - (RC)*IC +  VCE  + (RE)*IE = 0 \n IE=IB + IC"
+            "KVL 2: -VCC + (RC)*IC +  VCE  + (RE)*IE = 0 \n IE=IB + IC"
         return ((("Sat", sol[Ibase], sol[Icollector], 0.2), draw_circuit2_NPN_Sat, TEMP))
 
 
