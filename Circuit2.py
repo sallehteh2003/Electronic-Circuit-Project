@@ -98,63 +98,63 @@ def draw_circuit2_PNP(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
     return d
 
 
-def draw_circuit2_NPN_off(d):
+def draw_circuit2_NPN_off(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
     d += elm.Dot().at((-1.5033333333333332, 1.8410523547181874e-16))
-    d += elm.Resistor().left().label('Rb 200kΩ')
-    d += elm.SourceV().down().reverse().label('VBB 5V')
+    d += elm.Resistor().left().label(Rb)
+    d += elm.SourceV().down().reverse().label(VBB)
     d += elm.Line().length(7).right()
     d += elm.Line().length(0.5).up()
-    d += elm.SourceV().up().label('Vcc 10V')
+    d += elm.SourceV().up().label(VCC)
     d += elm.Dot().at((-0.7516666666666665, 0.6966666666666668))
     d += elm.Line().length(0.5).up()
-    d += elm.Resistor().right().label('3kΩ')
+    d += elm.Resistor().right().label(Rc)
     d += elm.Line().length(0.25).right()
     d += elm.Line().length(1.7).down()
     d += elm.Dot().at((-0.7516666666666667, -0.6966666666666665))
     d += elm.Line().length(0).down()
-    d += elm.Resistor().down().label('Re 2KΩ')
+    d += elm.Resistor().down().label(Re)
     d += elm.Line().length(0.4).down()
     d += elm.Ground()
     return d
 
 
-def draw_circuit2_NPN_Active(d):
+def draw_circuit2_NPN_Active(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
     d += elm.Dot().at((-1.5033333333333332, 1.8410523547181874e-16))
     d += elm.BatteryCell().left().reverse().label('Vbe')
-    d += elm.Resistor().left().label('Rb 200kΩ')
-    d += elm.SourceV().down().reverse().label('VBB 5V')
+    d += elm.Resistor().left().label(Rb)
+    d += elm.SourceV().down().reverse().label(VBB)
     d += elm.Line().length(10).right()
     d += elm.Line().length(2.5).up()
-    d += elm.SourceV().up().label('Vcc 10V')
+    d += elm.SourceV().up().label(VCC)
     d += elm.Dot().at((-0.7516666666666665, 0.6966666666666668))
     d += elm.SourceControlledI().label("ib").reverse()
-    d += elm.Resistor().right().label('3kΩ')
+    d += elm.Resistor().right().label(Rc)
     d += elm.Line().length(0.25).right()
     d += elm.Line().length(1.7).down()
     d += elm.Dot().at((-0.7516666666666667, -0.6966666666666665))
     d += elm.Line().length(0).down()
-    d += elm.Resistor().down().label('Re 2KΩ')
+    d += elm.Resistor().down().label(Re)
     d += elm.Line().length(0.4).down()
     d += elm.Ground()
     return d
 
 
-def draw_circuit2_NPN_Sat(d):
+def draw_circuit2_NPN_Sat(d,VBB="VBB",Rb="Rb",VCC="VCC",Rc="Rc",Re="Re"):
     d += elm.Dot().at((-1.5033333333333332, 1.8410523547181874e-16))
     d += elm.BatteryCell().left().reverse().label('Vbe')
-    d += elm.Resistor().left().label('Rb 200kΩ')
-    d += elm.SourceV().down().reverse().label('VBB 5V')
+    d += elm.Resistor().left().label(Rb)
+    d += elm.SourceV().down().reverse().label(VBB)
     d += elm.Line().length(10).right()
     d += elm.Line().length(2).up()
-    d += elm.SourceV().up().label('Vcc 10V')
+    d += elm.SourceV().up().label(VCC)
     d += elm.Dot().at((-0.7516666666666665, 0.6966666666666668))
     d += elm.BatteryCell().label("vce").reverse()
-    d += elm.Resistor().right().label('3kΩ')
+    d += elm.Resistor().right().label(Rc)
     d += elm.Line().length(0.25).right()
     d += elm.Line().length(1.7).down()
     d += elm.Dot().at((-0.7516666666666667, -0.6966666666666665))
     d += elm.Line().length(0).down()
-    d += elm.Resistor().down().label('Re 2KΩ')
+    d += elm.Resistor().down().label(Re)
     d += elm.Line().length(0.4).down()
     d += elm.Ground()
     return d
