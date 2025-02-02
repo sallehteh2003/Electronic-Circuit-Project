@@ -163,7 +163,7 @@ def draw_circuit2_NPN_Sat(d, VBB="VBB", Rb="Rb", VCC="VCC", Rc="Rc", Re="Re"):
 def Analysis_for_circuit2_NPN(VBB, RB, RE, Beta, VCC, RC):
     Ibase = (VBB-0.7)/(RB + RE*(Beta+1))
     if Ibase <= 0:
-        return ((("off", 0, 0, VCC), draw_circuit2_NPN_off, "KVL 1: -VBB + (RB)*IB + (RE)*(BETA+1)*IB + VBE(ACTIVE) = 0"))
+        return ((("off", 0, 0, VCC), draw_circuit2_NPN_off, "KVL 1: -VBB + (RB)*IB + (RE)*IE + VBE(ACTIVE) = 0"))
     Icollector = Beta * Ibase
     VCE = VCC - Icollector * (RC + ((Beta+1)/Beta)*RE)
     if VCE > 0.2:
@@ -183,15 +183,19 @@ def Analysis_for_circuit2_NPN(VBB, RB, RE, Beta, VCC, RC):
 def Analysis_for_circuit2_PNP(VBB, RB, RE, Beta, VCC, RC):
     Ibase = (0.7 - VBB) / (RB + RE * (Beta + 1))
     if Ibase >= 0:
-        return ("off")
+        return ((("off", 0, 0, VCC), draw_circuit2_PNP_off, "KVL 1: +VBB - (RB)*IB - (RE)*IE - VEB(ACTIVE) = 0"))
     Icollector = Beta * Ibase
     VCE = VCC - Icollector * (RC + ((Beta + 1) / Beta) * RE)
 
     if VCE > 0.2:
-        return ("Active", Ibase, Icollector, VCE)
+        TEMP = "KVL 1: +VBB - (RB)*IB - VEB(ACTIVE) -(RE)*IE  = 0\n" + \
+            "KVL 2: +VCC - (RC)*IC -  VEC - (RE)*IE = 0 \n IC=BETA*IB"
+        return ((("Active", Ibase, Icollector, VCE), draw_circuit2_PNP_Active, TEMP))
     else:
         Ibase, Icollector = symbols('Ibase Icollector')
         eq1 = Eq(Ibase * (RB + RE) + Icollector * RE, 0.7 - VBB)
         eq2 = Eq(Ibase * RB + Icollector * (RC + RE), VCC - 0.2)
         sol = solve((eq1, eq2), (Ibase, Icollector))
-        return ("Sat", sol[Ibase], sol[Icollector], 0.2)
+        TEMP = "KVL 1: +VBB - (RB)*IB - VEB(SAT) -(RE)*IE = 0\n" + \
+            "KVL 2: +VCC - (RC)*IC -  VEC - (RE)*IE = 0 \n IE=IB + IC"
+        return ((("Sat", sol[Ibase], sol[Icollector], 0.2), draw_circuit2_PNP_Sat, TEMP))
