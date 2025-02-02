@@ -39,7 +39,7 @@ def draw_circuit2_PNP_Active(d, VBB="VBB", RB="Rb", VCC="VCC", RC="Rc", Re="Re")
     return d
 
 
-def draw_circuit2_PNP_Sat(d, VBB="VBB", Rb="Rb", VCC="VCC", Rc="Rc", Re="Re"):
+def draw_circuit2_PNP_Sat(d, VBB="VBB", RB="Rb", VCC="VCC", RC="Rc", Re="Re"):
     d += elm.BatteryCell().left().label('VEB')
     d += elm.Resistor().left().label(RB)
     d += elm.BatteryCell().down().label(VBB).reverse()

@@ -199,4 +199,5 @@ pyrightconfig.json
 ven/*
 ven.rar
  __pycache__/*
+ __pycache__/Circuit1.cpython-312.pyc
 
