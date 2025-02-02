@@ -24,6 +24,7 @@ def draw_circuit7_PNP(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",RE="RE"):
     d += elm.BatteryCell().up().label(VCC)
     d += elm.Line().length(1.5).up().at(transistor.collector)
     d += elm.Resistor().right().label(RC,'bottom')
+    return d
 
 def draw_circuit7_PNP_ACTIVE(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",RE="RE"):
     Battery = d.add( elm.BatteryCell().left().label('VEB(ACTIVE)').scale(0.7))
@@ -45,6 +46,7 @@ def draw_circuit7_PNP_ACTIVE(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",RE="RE"):
     d += elm.BatteryCell().up().label(VCC)
     d += elm.SourceControlledI().up().label("Beta IB").at(Battery.start)
     d += elm.Resistor().right().label(RC)
+    return d
 
 def draw_circuit7_PNP_SAT(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC" ,RE="RE"):
     Battery = d.add( elm.BatteryCell().left().label('VEB(SAT)').scale(0.7))
@@ -66,6 +68,7 @@ def draw_circuit7_PNP_SAT(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC" ,RE="RE"):
     d += elm.BatteryCell().up().label(VCC)
     d += elm.BatteryCell().up().label("VEC(SAT)").at(Battery.start)
     d += elm.Resistor().right().label(RC)
+    return d
 
 
 def draw_circuit7_PNP_off(d, RB1="RB1", RB2="RB2", VCC="VCC", RC="RC", RE="RE"):
@@ -92,6 +95,7 @@ def draw_circuit7_PNP_off(d, RB1="RB1", RB2="RB2", VCC="VCC", RC="RC", RE="RE"):
     d += elm.Resistor().left().label(RC)
     d += elm.Line().length(2).down()
     d += elm.Dot().label("C",'right')
+    return d
 
 def draw_circuit7_NPN(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",RE="RE"):
    
@@ -117,6 +121,7 @@ def draw_circuit7_NPN(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",RE="RE"):
     d += elm.Line().length(1.41).up()
     d += elm.Line().length(2).left()
     d += elm.Resistor().up().label(RC).at(transistor.collector)
+    return d
     
 def draw_circuit7_NPN_ACTIVE(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC", RE="RE"):
     d += elm.BatteryCell().down().label(VCC)
@@ -138,6 +143,7 @@ def draw_circuit7_NPN_ACTIVE(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC", RE="RE"):
     d += elm.BatteryCell().up().label(VCC).reverse()
     d += elm.Resistor().left().label(RC)
     d += elm.SourceControlledI().down().label("Beta IB")
+    return d
 
 def draw_circuit7_NPN_SAT(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",RE="RE"):
     d += elm.BatteryCell().down().label(VCC)
@@ -159,7 +165,8 @@ def draw_circuit7_NPN_SAT(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",RE="RE"):
     d += elm.BatteryCell().up().label(VCC).reverse()
     d += elm.Resistor().left().label(RC)
     d += elm.BatteryCell().down().label("VCE (sat)")
-    
+    return d
+        
 def draw_circuit7_NPN_OFF(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",RE="RE"):
     d += elm.BatteryCell().down().label(VCC)
     d += elm.Line().length(0.5).left()
@@ -184,6 +191,7 @@ def draw_circuit7_NPN_OFF(d,RB1="RB1",RB2="RB2",VCC="VCC",RC="RC",RE="RE"):
     d += elm.Resistor().left().label(RC)
     d += elm.Line().length(2).down()
     d += elm.Dot().label("C",'right')
+    return d
 
 
 def Analysis_for_circuit7_NPN(RB2,RB1,VCC,RC,RE,BETA):
