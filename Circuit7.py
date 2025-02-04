@@ -211,7 +211,7 @@ def Analysis_for_circuit7_NPN(RB2,RB1,VCC,RC,RE,BETA):
             eq2 = Eq( -VCC + IC * RC + 0.2 + RE * (IC + IB) , 0 )
             solution = solve((eq1, eq2), (IC ,IB))
             TEMP = "KVL 1: -VTH + (RTH)*IB + VBE(sat) + RE * IE = 0 \n KVL 2: -VCC + IC *RC + VCE(SAT) + IE * RE   \n IE = IC + IB"
-            return((("Sat",solution[IC],IC[IB],0.2),draw_circuit7_NPN_SAT,TEMP))
+            return((("Sat",solution[IC],solution[IB],0.2),draw_circuit7_NPN_SAT,TEMP))
 
 def Analysis_for_circuit7_PNP(RB2,RB1,VEE,VCC,RC,RE,BETA):
         VTH = (RB2/(RB1+RB2))* (-1 * VCC)
@@ -230,4 +230,4 @@ def Analysis_for_circuit7_PNP(RB2,RB1,VEE,VCC,RC,RE,BETA):
             eq2 = Eq( -VCC + IC * RC + 0.2 + RE * (IC + IB) , 0 )
             solution = solve((eq1, eq2), (IC ,IB))
             TEMP = "KVL 1: -VTH + (RTH)*IB + VBE(sat) + RE * IE = 0 \n KVL 2: -VCC + IC *RC + VCE(SAT) + IE * RE   \n IE = IC + IB"
-            return((("Sat",solution[IC],IC[IB],0.2),draw_circuit7_NPN_SAT,TEMP))
+            return((("Sat",solution[IC],solution[IB],0.2),draw_circuit7_NPN_SAT,TEMP))

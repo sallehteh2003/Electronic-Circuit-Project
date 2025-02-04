@@ -82,6 +82,14 @@ def Analysis_circuit(inputs,selected_circuit,selected_Type):
     clean_frames()
     d = schemdraw.Drawing()
     result = {}
+    label = tk.Label(frame_1, text="Circuit", font=("Helvetica", 10,'bold'),fg="red")
+    label.pack(padx=10, pady=10)
+    label1 = tk.Label(frame_2, text="Circuit with equivalent circuit placement", font=("Helvetica", 10,'bold'),fg="red")
+    label1.pack(padx=10, pady=10)
+    label1 = tk.Label(frame_3, text="KVL And KCL", font=("Helvetica", 10,'bold'),fg="red")
+    label1.pack(padx=10, pady=10)
+    label1 = tk.Label(frame_4, text="Analysis Answer", font=("Helvetica", 10,'bold'),fg="red")
+    label1.pack(padx=10, pady=10)
     if selected_circuit == "Circuit 1":
         if(selected_Type == "NPN"):
             d = C.draw_circuit1_NPN(d,inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VBB"][1])
