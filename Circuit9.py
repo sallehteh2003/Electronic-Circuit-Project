@@ -54,7 +54,7 @@ def draw_circuit9_NPN_off(d, RC="RC", RB="RB", RE="RE", VCC="VCC"):
     return d
 
 
-def draw_circuit9_PNP(d, RC="RC", RB="RB", RE="RE", VCC="-VCC"):
+def draw_circuit9_PNP(d, RC="RC", RB="RB", RE="RE", VCC="VCC"):
     transistor = d.add(elm.BjtPnp2(circle=False).label("Q1").reverse())
     d += elm.Resistor().up().label(RC).at(transistor.collector)
     d += elm.Dot().label(VCC).up()
@@ -67,7 +67,7 @@ def draw_circuit9_PNP(d, RC="RC", RB="RB", RE="RE", VCC="-VCC"):
     return d
 
 
-def draw_circuit9_PNP_Active(d, RC="RC", RB="RB", RE="RE", VCC="-VCC"):
+def draw_circuit9_PNP_Active(d, RC="RC", RB="RB", RE="RE", VCC="VCC"):
     d += elm.Dot().label(VCC).down()
     d += elm.Resistor().down().label(RC)
     sci = d.add(elm.SourceControlledI().down().label("ic").reverse())
@@ -80,7 +80,7 @@ def draw_circuit9_PNP_Active(d, RC="RC", RB="RB", RE="RE", VCC="-VCC"):
     return d
 
 
-def draw_circuit9_PNP_Sat(d, RC="RC", RB="RB", RE="RE", VCC="-VCC"):
+def draw_circuit9_PNP_Sat(d, RC="RC", RB="RB", RE="RE", VCC="VCC"):
     d += elm.Dot().label(VCC).down()
     d += elm.Resistor().down().label(RC)
     valtageSource = d.add(elm.BatteryCell().down().label("VEC(sat.)").reverse())
@@ -93,7 +93,7 @@ def draw_circuit9_PNP_Sat(d, RC="RC", RB="RB", RE="RE", VCC="-VCC"):
     return d
 
 
-def draw_circuit9_PNP_off(d, RC="RC", RB="RB", RE="RE", VCC="-VCC"):
+def draw_circuit9_PNP_off(d, RC="RC", RB="RB", RE="RE", VCC="VCC"):
     d += elm.Dot().at((0.7516666666666666, 0.6966666666666667))
     d += elm.Resistor().up().label(RC)
     d += elm.Dot().label(VCC).up()
@@ -146,7 +146,7 @@ def Analysis_for_circuit9_NPN(VCC, RC, RB, RE, Beta):
 
 def Analysis_fort_circuit9_PNP(VCC, RC, RB, RE, Beta):
     IB = symbols('IB')
-    eq = Eq((Beta + 1) * IB * RB + 0.7 + IB * RB + VCC, 0)
+    eq = Eq((Beta + 1) * IB * RE + 0.7 + IB * RB + VCC, 0)
     solution = solve((eq), (IB))
     IB = solution[0]
     kvl1 = "KVL 1: (Beta + 1) * IB * RB + VEB(act.) + IB * RB + VCC = 0"
