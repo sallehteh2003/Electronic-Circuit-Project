@@ -311,7 +311,7 @@ def open_input_window(selected_circuit,selected_Type):
                 temp=input_entries[i].get()+"K"
             else :
                 temp=input_entries[i].get()
-            inputs[Circuit_inputs[selected_circuit][i+1]] = (int(input_entries[i].get()),temp)
+            inputs[Circuit_inputs[selected_circuit][i+1]] = (float(input_entries[i].get()),temp)
         print(inputs)
         Analysis_circuit(inputs,selected_circuit,selected_Type)
         
