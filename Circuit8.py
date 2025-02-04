@@ -22,6 +22,7 @@ def draw_circuit8_NPN(d, RB="RB", VCC="VCC", RC="RC", RE="RE"):
 def draw_circuit8_NPN_Active(d, RB="RB", VCC="VCC", RC="RC", RE="RE"):
     d += elm.SourceControlledI().label("ic").down()
     d += elm.Resistor().down().label(RE)
+    d += elm.Ground()
     d += elm.Line().length(3).right()
     d += elm.BatteryCell().up().label(VCC).reverse()
     d += elm.Line().length(6).up()
@@ -36,6 +37,7 @@ def draw_circuit8_NPN_Active(d, RB="RB", VCC="VCC", RC="RC", RE="RE"):
 def draw_circuit8_NPN_Sat(d, RB="RB", VCC="VCC", RC="RC", RE="RE"):
     d += elm.BatteryCell().label("VCE(sat.)").down()
     d += elm.Resistor().down().label(RE)
+    d += elm.Ground()
     d += elm.Line().length(3).right()
     d += elm.BatteryCell().up().label(VCC).reverse()
     d += elm.Line().length(6).up()
@@ -72,7 +74,7 @@ def draw_circuit8_PNP(d, RB="RB", VCC="VCC", RC="RC", RE="RE"):
     d += elm.Line().length(3).right()
     d += elm.Ground()
     d += elm.Line().length(1).up()
-    d += elm.BatteryCell().up().label(VCC).reverse()
+    d += elm.BatteryCell().up().label(VCC)
     d += elm.Line().length(5).up()
     d += elm.Line().length(3).left()
     d += elm.Resistor().down().label(RC)
@@ -85,6 +87,7 @@ def draw_circuit8_PNP(d, RB="RB", VCC="VCC", RC="RC", RE="RE"):
 def draw_circuit8_PNP_Active(d, RB="RB", VCC="VCC", RC="RC", RE="RE"):
     d += elm.SourceControlledI().label("ic").reverse().down()
     d += elm.Resistor().down().label(RE)
+    d += elm.Ground()
     d += elm.Line().length(3).right()
     d += elm.BatteryCell().up().label(VCC)
     d += elm.Line().length(6).up()
@@ -99,6 +102,7 @@ def draw_circuit8_PNP_Active(d, RB="RB", VCC="VCC", RC="RC", RE="RE"):
 def draw_circuit8_PNP_Sat(d, RB="RB", VCC="VCC", RC="RC", RE="RE"):
     d += elm.BatteryCell().label("VEC(sat.)").down().reverse()
     d += elm.Resistor().down().label(RE)
+    d += elm.Ground()
     d += elm.Line().length(3).right()
     d += elm.BatteryCell().up().label(VCC)
     d += elm.Line().length(6).up()
@@ -131,54 +135,58 @@ def draw_circuit8_PNP_off(d, RB="RB", VCC="VCC", RC="RC", RE="RE"):
 
 def Analysis_for_circuit8_NPN(VCC, RE, RB, RC, Beta):
     IB = (VCC - 0.7) / (Beta + 1 + RB + (Beta + 1) * RE)
+    kvl1 = "KVL 1: -VCC + (Beta+1) * IB + IB * RB + VBE + (Beta+1)*RE*IB = 0"
     if IB <= 0:
         return (
             ("off", 0, 0, VCC),
             draw_circuit8_NPN_off,
-            "KVL 1: -VCC + (Beta+1) * IB + IB * RB + VBE + (Beta+1)*RE*IB = 0",
+            kvl1,
         )
     IC = Beta * IB
     VCE = VCC - (Beta + 1) * IB * (RC + RE)
+    kvl2 = "KVL 2: -VCC + (Beta+1) * IB * RC + VCE + (Beta + 1) * IB * RE = 0"
     if VCE > 0.2:
-        kvlText = "KVL 1: -VCC + (Beta+1) * IB * RC + VCE + (Beta + 1) * IB * RE = 0"
-        return (("Active", IB, IC, VCE), draw_circuit8_NPN_Active, kvlText)
+        return (("Active", IB, IC, VCE), draw_circuit8_NPN_Active, kvl1 + "\n" + kvl2)
     else:
-        IB, IC = symbols("IC IB")
+        IB, IC = symbols('IC IB')
         eq1 = Eq(-VCC + (IB + IC) * RC + IB * RB + 0.8 + (IB + IC) * RE, 0)
         eq2 = Eq(-VCC + (IB + IC) * RC + 0.2 + (IB + IC) * RE, 0)
+        kvl3 = "KVL 3: -VCC + (IB + IC) * RC + IB * RB + VBE(sat.) + (IB + IC) * RE = 0"
+        kvl4 = "KVL 4: -VCC + (IB + IC) * RC + VCE(sat.) + (IB + IC) * RE = 0"
         solution = solve((eq1, eq2), (IC, IB))
-        kvlText = "KVL 1: -VCC + (IB + IC) * RC + IB * RB + VBE(sat.) + (IB + IC) * RE = 0 \n KVL 2: -VCC + (IB + IC) * RC + VCE(sat.) + (IB + IC) * RE = 0"
         return (
             ("Sat", solution[IB], solution[IC], 0.2),
             draw_circuit8_NPN_Sat,
-            kvlText,
+            kvl1 + "\n" + kvl2 + "\n" + kvl3 + "\n" + kvl4,
         )
 
 
 def Analysis_for_circuit8_PNP(VCC, RE, RB, RC, Beta):
     IB = (-VCC - 0.7) / (Beta + 1) * (RE + RC) + RB
+    kvl1 = "KVL 1: VCC + (Beta + 1) * IB * (RE + RC) + RB * IB + 0.7 = 0"
     if IB <= 0:
         return (
             ("off", 0, 0, VCC),
             draw_circuit8_PNP_off,
-            "KVL 1: VCC + (Beta + 1) * IB * (RE + RC) + RB * IB + 0.7 = 0",
+            kvl1,
         )
     IC = Beta * IB
-    VEC = symbols("VCE")
+    VEC = symbols('VCE')
     eq = Eq((IC + IB) * (RE + RC) + VEC + VCC, 0)
+    kvl2 = "KVL 2: (IC + IB)*(RE + RC) + VEC + VCC = 0"
     solution = solve((eq), (VEC))
     VEC = solution[0]
     if VEC > 0.2:
-        kvlText = "KVL 1: (IC + IB)*(RE + RC) + VEC + VCC = 0"
-        return (("Active", IB, IC), draw_circuit8_PNP_Sat, kvlText)
+        return (("Active", IB, IC, VEC), draw_circuit8_PNP_Sat, kvl1 + "\n" + kvl2)
     else:
-        IB, IC = symbols("IB IC")
+        IB, IC = symbols('IB IC')
         eq1 = Eq((IC + IB) * (RE + RC) + IB * RB + 0.8 + VCC, 0)
         eq2 = Eq((IC + IB) * (RE + RC) + 0.2 + VCC, 0)
+        kvl3 = "KVL 3: (IC + IB)*(RE + RC) + IB * RB + VEB(sat.) + VCC = 0"
+        kvl4 = "KVL 4: (IC + IB) * (RE + RC) + VEC(sat.) + VCC = 0"
         solution = solve((eq1, eq2), (IB, IC))
-        kvlText = "KVL 1: (IC + IB)*(RE + RC) + IB * RB + VEB(sat.) + VCC = 0 \n KVL 2: (IC + IB) * (RE + RC) + VEC(sat.) + VCC = 0"
         return (
-            ("Sat", solution[IB], solution[IC], -0.2),
+            ("Sat", solution[IB], solution[IC], 0.2),
             draw_circuit8_PNP_Sat,
-            kvlText,
+            kvl1 + "\n" + kvl2 + "\n" + kvl3 + "\n" + kvl4,
         )

@@ -12,6 +12,7 @@ import Circuit2  as C4
 import Circuit3  as C5
 import Circuit4  as C6
 import Circuit8  as C7
+import Circuit9  as C8
 from tkinter import simpledialog
 # تابع برای نمایش رسم در Tkinter
 def show_drawing_in_tkinter(drawing, frame_to_display):
@@ -64,7 +65,7 @@ frame.pack()
 
 Circuit_inputs= {"Circuit 1":[5,"VCC","VBB","RB","RC","BETA"],"Circuit 2":[6,"VCC","VBB","RB","RC","RE","BETA"],
                  "Circuit 9":[7,"VEE","VCC","RB1","RC","BETA","RE","RB2"],"Circuit 6":[6,"VCC","RB1","RC","BETA","RE","RB2"],
-                 "Circuit 3":[4,"VCC","RB","RC","BETA"],"Circuit 4":[4,"VCC","RB","RC","BETA"],
+                 "Circuit 3":[4,"VCC","RB","RC","BETA"],"Circuit 4":[4,"VCC","RB","RC","BETA"],"Circuit 8":[5,"VCC","RB","RC","BETA","RE",],
                  "Circuit 5":[6,"VCC","RB","RC","BETA","RE","VEE"],"Circuit 7":[5,"VCC","RB","RC","BETA","RE"]}
 
 def clean_frames():
@@ -173,6 +174,19 @@ def Analysis_circuit(inputs,selected_circuit,selected_Type):
                 result = C7.Analysis_for_circuit8_PNP(inputs["VCC"][0],inputs["RE"][0],inputs["RB"][0],inputs["RC"][0],inputs["BETA"][0])
                 d = schemdraw.Drawing()
                 d = result[1](d,inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1])
+    elif selected_circuit == "Circuit 8":
+        if selected_Type == "NPN":
+                d = C8.draw_circuit9_NPN(d,inputs["RC"][1],inputs["RB"][1],inputs["RE"][1],inputs["VCC"][1])
+                show_drawing_in_tkinter(d, frame_1)
+                result = C8.Analysis_for_circuit9_NPN(inputs["VCC"][0],inputs["RC"][0],inputs["RB"][0],inputs["RE"][0],inputs["BETA"][0])
+                d = schemdraw.Drawing()
+                d = result[1](d,inputs["RC"][1],inputs["RB"][1],inputs["RE"][1],inputs["VCC"][1])
+        else:
+                d = C8.draw_circuit9_PNP(d,inputs["RC"][1],inputs["RB"][1],inputs["RE"][1],inputs["VCC"][1])
+                show_drawing_in_tkinter(d, frame_1)
+                result = C8.Analysis_fort_circuit9_PNP(inputs["VCC"][0],inputs["RC"][0],inputs["RB"][0],inputs["RE"][0],inputs["BETA"][0])
+                d = schemdraw.Drawing()
+                d = result[1](d,inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1])
     elif selected_circuit == "Circuit 9":
             if selected_Type == "NPN":
                 d = C1.draw_circuit10_NPN(d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VEE"][1],inputs["RE"][1])
@@ -238,6 +252,11 @@ def draw_circuit(selected_circuit,selected_Type):
             d = C7.draw_circuit8_NPN(d)
         else:
             d = C7.draw_circuit8_PNP(d)
+    elif selected_circuit == "Circuit 8":
+        if selected_Type == "NPN":
+            d = C8.draw_circuit9_NPN(d)
+        else:
+            d = C8.draw_circuit9_PNP(d)
     elif selected_circuit == "Circuit 9":
         if selected_Type == "NPN":
             d = C1.draw_circuit10_NPN(d)
@@ -279,9 +298,9 @@ def open_input_window(selected_circuit,selected_Type):
             if Circuit_inputs[selected_circuit][i+1]=="VCC" or Circuit_inputs[selected_circuit][i+1]=="VBB" or Circuit_inputs[selected_circuit][i+1]=="VEE":
                 temp=input_entries[i].get()+"V"
             elif Circuit_inputs[selected_circuit][i+1]=="RB" or Circuit_inputs[selected_circuit][i+1]=="RC" or Circuit_inputs[selected_circuit][i+1]=="RE" :
-                temp=input_entries[i].get()+"K ohms"
+                temp=input_entries[i].get()+"K"
             elif Circuit_inputs[selected_circuit][i+1]=="RB1" or Circuit_inputs[selected_circuit][i+1]=="RB2":
-                temp=input_entries[i].get()+"K ohms"
+                temp=input_entries[i].get()+"K"
             else :
                 temp=input_entries[i].get()
             inputs[Circuit_inputs[selected_circuit][i+1]] = (int(input_entries[i].get()),temp)
@@ -311,11 +330,11 @@ bottom_frame = tk.Frame(root, bg="lightgray")
 bottom_frame.pack(side=tk.BOTTOM, fill=tk.X, padx=10, pady=10)
 
 # منوی کشویی برای انتخاب مدار
-dropdown_menu = ttk.Combobox(bottom_frame, textvariable=selected_option1, values=Types, font=button_font)
+dropdown_menu = ttk.Combobox(bottom_frame, textvariable=selected_option1, values=Types, font=button_font,state="readonly")
 dropdown_menu.set("Select Type of BJT")  # تنظیم مقدار پیش‌فرض
 dropdown_menu.pack(side=tk.LEFT, padx=10, pady=10)
 
-dropdown_menu = ttk.Combobox(bottom_frame, textvariable=selected_option, values=options, font=button_font)
+dropdown_menu = ttk.Combobox(bottom_frame, textvariable=selected_option, values=options, font=button_font,state="readonly" )
 dropdown_menu.set("Select Circuit")  # تنظیم مقدار پیش‌فرض
 dropdown_menu.pack(side=tk.LEFT, padx=10, pady=10)
 
