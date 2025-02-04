@@ -162,7 +162,7 @@ def Analysis_for_circuit8_NPN(VCC, RE, RB, RC, Beta):
 
 
 def Analysis_for_circuit8_PNP(VCC, RE, RB, RC, Beta):
-    IB = (-VCC - 0.7) / (Beta + 1) * (RE + RC) + RB
+    IB = (VCC - 0.7) / (Beta + 1) * (RE + RC) + RB
     kvl1 = "KVL 1: VCC + (Beta + 1) * IB * (RE + RC) + RB * IB + 0.7 = 0"
     if IB <= 0:
         return (
@@ -171,17 +171,17 @@ def Analysis_for_circuit8_PNP(VCC, RE, RB, RC, Beta):
             kvl1,
         )
     IC = Beta * IB
-    VEC = symbols('VCE')
-    eq = Eq((IC + IB) * (RE + RC) + VEC + VCC, 0)
+    VEC = symbols("VCE")
+    eq = Eq((IC + IB) * (RE + RC) + VEC - VCC, 0)
     kvl2 = "KVL 2: (IC + IB)*(RE + RC) + VEC + VCC = 0"
     solution = solve((eq), (VEC))
     VEC = solution[0]
     if VEC > 0.2:
         return (("Active", IB, IC, VEC), draw_circuit8_PNP_Sat, kvl1 + "\n" + kvl2)
     else:
-        IB, IC = symbols('IB IC')
-        eq1 = Eq((IC + IB) * (RE + RC) + IB * RB + 0.8 + VCC, 0)
-        eq2 = Eq((IC + IB) * (RE + RC) + 0.2 + VCC, 0)
+        IB, IC = symbols("IB IC")
+        eq1 = Eq((IC + IB) * (RE + RC) + IB * RB + 0.8 - VCC, 0)
+        eq2 = Eq((IC + IB) * (RE + RC) + 0.2 - VCC, 0)
         kvl3 = "KVL 3: (IC + IB)*(RE + RC) + IB * RB + VEB(sat.) + VCC = 0"
         kvl4 = "KVL 4: (IC + IB) * (RE + RC) + VEC(sat.) + VCC = 0"
         solution = solve((eq1, eq2), (IB, IC))
@@ -190,3 +190,4 @@ def Analysis_for_circuit8_PNP(VCC, RE, RB, RC, Beta):
             draw_circuit8_PNP_Sat,
             kvl1 + "\n" + kvl2 + "\n" + kvl3 + "\n" + kvl4,
         )
+
