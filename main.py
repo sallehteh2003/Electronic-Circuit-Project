@@ -9,6 +9,9 @@ import Circuit10 as C1
 import Circuit7 as C2
 import Circuit6 as C3
 import Circuit2  as C4
+import Circuit3  as C5
+import Circuit4  as C6
+import Circuit8  as C7
 from tkinter import simpledialog
 # تابع برای نمایش رسم در Tkinter
 def show_drawing_in_tkinter(drawing, frame_to_display):
@@ -59,7 +62,10 @@ frame_top.grid_rowconfigure(1, weight=1)
 frame = tk.Frame(root)
 frame.pack()
 
-Circuit_inputs= {"Circuit 1":[5,"VCC","VBB","RB","RC","BETA"],"Circuit 2":[6,"VCC","VBB","RB","RC","RE","BETA"],"Circuit 9":[7,"VEE","VCC","RB1","RC","BETA","RE","RB2"],"Circuit 6":[6,"VCC","RB1","RC","BETA","RE","RB2"],"Circuit 5":[6,"VCC","RB","RC","BETA","RE","VEE"]}
+Circuit_inputs= {"Circuit 1":[5,"VCC","VBB","RB","RC","BETA"],"Circuit 2":[6,"VCC","VBB","RB","RC","RE","BETA"],
+                 "Circuit 9":[7,"VEE","VCC","RB1","RC","BETA","RE","RB2"],"Circuit 6":[6,"VCC","RB1","RC","BETA","RE","RB2"],
+                 "Circuit 3":[4,"VCC","RB","RC","BETA"],"Circuit 4":[4,"VCC","RB","RC","BETA"],
+                 "Circuit 5":[6,"VCC","RB","RC","BETA","RE","VEE"],"Circuit 7":[5,"VCC","RB","RC","BETA","RE"]}
 
 def clean_frames():
     for widget in frame_1.winfo_children():
@@ -88,7 +94,7 @@ def Analysis_circuit(inputs,selected_circuit,selected_Type):
             result = C.Analysis_for_circuit1_PNP(inputs["VBB"][0],inputs["RB"][0],inputs["BETA"][0],inputs["VCC"][0],inputs["RC"][0])
             d = schemdraw.Drawing()
             d = result[1](d,inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VBB"][1])
-            
+
     elif selected_circuit == "Circuit 2":
         if selected_Type == "NPN":
                 d = C4.draw_circuit2_NPN(d,inputs["VBB"][1],inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1])
@@ -102,7 +108,32 @@ def Analysis_circuit(inputs,selected_circuit,selected_Type):
                 result = C4.Analysis_for_circuit2_PNP(inputs["VBB"][0],inputs["RB"][0],inputs["RE"][0],inputs["BETA"][0],inputs["VCC"][0],inputs["RC"][0])
                 d = schemdraw.Drawing()
                 d = result[1](d,inputs["VBB"][1],inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1]) 
-
+    elif selected_circuit == "Circuit 3":
+        if selected_Type == "NPN":
+                d = C5.draw_circuit3_NPN(d,inputs["RB"][1],inputs["RC"][1],inputs["VCC"][1])
+                show_drawing_in_tkinter(d, frame_1)
+                result = C5.Analysis_for_circuit3_NPN(inputs["RB"][0],inputs["BETA"][0],inputs["VCC"][0],inputs["RC"][0])
+                d = schemdraw.Drawing()
+                d = result[1](d,inputs["RB"][1],inputs["RC"][1],inputs["VCC"][1])
+        else:
+                d = C5.draw_circuit3_PNP(d,inputs["RB"][1],inputs["RC"][1],inputs["VCC"][1])
+                show_drawing_in_tkinter(d, frame_1)
+                result = C5.Analysis_for_circuit3_PNP(inputs["RB"][0],inputs["BETA"][0],inputs["VCC"][0],inputs["RC"][0])
+                d = schemdraw.Drawing()
+                d = result[1](d,inputs["RB"][1],inputs["RC"][1],inputs["VCC"][1]) 
+    elif selected_circuit == "Circuit 4":
+        if selected_Type == "NPN":
+                d = C6.draw_circuit4_NPN(d,inputs["RB"][1],inputs["RC"][1],inputs["VCC"][1])
+                show_drawing_in_tkinter(d, frame_1)
+                result = C6.Analysis_for_circuit4_NPN(inputs["RB"][0],inputs["BETA"][0],inputs["VCC"][0],inputs["RC"][0])
+                d = schemdraw.Drawing()
+                d = result[1](d,inputs["RB"][1],inputs["RC"][1],inputs["VCC"][1])
+        else:
+                d = C6.draw_circuit4_PNP(d,inputs["RB"][1],inputs["RC"][1],inputs["VCC"][1])
+                show_drawing_in_tkinter(d, frame_1)
+                result = C6.Analysis_for_circuit4_PNP(inputs["RB"][0],inputs["BETA"][0],inputs["VCC"][0],inputs["RC"][0])
+                d = schemdraw.Drawing()
+                d = result[1](d,inputs["RB"][1],inputs["RC"][1],inputs["VCC"][1]) 
     elif selected_circuit == "Circuit 5":
         if selected_Type == "NPN":
                 d = C3.draw_circuit6_NPN(d,inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1],inputs["VEE"][1])
@@ -116,9 +147,6 @@ def Analysis_circuit(inputs,selected_circuit,selected_Type):
                 result = C3.Analysis_for_circuit6_PNP(inputs["VEE"][0],inputs["RB"][0],inputs["BETA"][0],inputs["VCC"][0],inputs["RC"][0],inputs["RE"][0])
                 d = schemdraw.Drawing()
                 d = result[1](d,inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1],inputs["VEE"][1])  
-
-    
-
     elif selected_circuit == "Circuit 6":
         if selected_Type == "NPN":
                 d = C2.draw_circuit7_NPN(d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1])
@@ -132,7 +160,19 @@ def Analysis_circuit(inputs,selected_circuit,selected_Type):
                 result = C2.Analysis_for_circuit7_PNP(inputs["RB2"][0],inputs["RB1"][0],inputs["VCC"][0],inputs["RC"][0],inputs["RE"][0],inputs["BETA"][0])
                 d = schemdraw.Drawing()
                 d = result[1](d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1])  
-
+    elif selected_circuit == "Circuit 7":
+        if selected_Type == "NPN":
+                d = C7.draw_circuit8_NPN(d,inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1])
+                show_drawing_in_tkinter(d, frame_1)
+                result = C7.Analysis_for_circuit8_NPN(inputs["VCC"][0],inputs["RE"][0],inputs["RB"][0],inputs["RC"][0],inputs["BETA"][0])
+                d = schemdraw.Drawing()
+                d = result[1](d,inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1])
+        else:
+                d = C7.draw_circuit8_PNP(d,inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1])
+                show_drawing_in_tkinter(d, frame_1)
+                result = C7.Analysis_for_circuit8_PNP(inputs["VCC"][0],inputs["RE"][0],inputs["RB"][0],inputs["RC"][0],inputs["BETA"][0])
+                d = schemdraw.Drawing()
+                d = result[1](d,inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1])
     elif selected_circuit == "Circuit 9":
             if selected_Type == "NPN":
                 d = C1.draw_circuit10_NPN(d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VEE"][1],inputs["RE"][1])
@@ -148,11 +188,7 @@ def Analysis_circuit(inputs,selected_circuit,selected_Type):
                 d = result[1](d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VEE"][1],inputs["RE"][1])
     
     show_drawing_in_tkinter(d, frame_2)
-    text=""
-    text+=f"State of BJT : {result[0][0]}\n"
-    text+=f"IB : {result[0][1]} mA\n"
-    text+=f"IC : {result[0][2]} mA\n"
-    text+=f"VCE (NPN) or VEC (PNP) : {result[0][3]} V\n"
+    text = f"State of BJT : {result[0][0]}\n IB : {result[0][1]} mA\n IC : {result[0][2]} mA\n VCE (NPN) or VEC (PNP) : {result[0][3]} V\n"
     label = tk.Label(frame_4, text=text, font=("Helvetica", 10))
     label.pack(padx=10, pady=10)
     label1 = tk.Label(frame_3, text=result[2], font=("Helvetica", 10))
@@ -177,17 +213,31 @@ def draw_circuit(selected_circuit,selected_Type):
             d = C4.draw_circuit2_NPN(d)
         else:
             d = C4.draw_circuit2_PNP(d)
+    elif selected_circuit == "Circuit 3":
+        if selected_Type == "NPN":
+            d = C5.draw_circuit3_NPN(d)
+        else:
+            d = C5.draw_circuit3_PNP(d)
+    elif selected_circuit == "Circuit 4":
+        if selected_Type == "NPN":
+            d = C6.draw_circuit4_NPN(d)
+        else:
+            d = C6.draw_circuit4_PNP(d)
     elif selected_circuit == "Circuit 5":
         if selected_Type == "NPN":
             d = C3.draw_circuit6_NPN(d)
         else:
-            d = C3.draw_circuit6_PNP(d)
-       
+            d = C3.draw_circuit6_PNP(d)  
     elif selected_circuit == "Circuit 6":
         if selected_Type == "NPN":
             d = C2.draw_circuit7_NPN(d)
         else:
             d = C2.draw_circuit7_PNP(d)
+    elif selected_circuit == "Circuit 7":
+        if selected_Type == "NPN":
+            d = C7.draw_circuit8_NPN(d)
+        else:
+            d = C7.draw_circuit8_PNP(d)
     elif selected_circuit == "Circuit 9":
         if selected_Type == "NPN":
             d = C1.draw_circuit10_NPN(d)
@@ -205,7 +255,16 @@ def open_input_window(selected_circuit,selected_Type):
     
     # ایجاد ورودی‌ها به تعداد مورد نظر
     for i in range(num_inputs):
-        label = tk.Label(input_window, text= Circuit_inputs[selected_circuit][i+1])
+        temp=""
+        if Circuit_inputs[selected_circuit][i+1]=="VCC" or Circuit_inputs[selected_circuit][i+1]=="VBB" or Circuit_inputs[selected_circuit][i+1]=="VEE" :
+            temp = Circuit_inputs[selected_circuit][i+1] +" (Volts)"
+        elif Circuit_inputs[selected_circuit][i+1]=="RB" or Circuit_inputs[selected_circuit][i+1]=="RC" or Circuit_inputs[selected_circuit][i+1]=="RE":
+            temp = Circuit_inputs[selected_circuit][i+1]+" (K ohms)"
+        elif Circuit_inputs[selected_circuit][i+1]=="RB1" or Circuit_inputs[selected_circuit][i+1]=="RB2":
+            temp = Circuit_inputs[selected_circuit][i+1]+" (K ohms)"
+        else:
+            temp = Circuit_inputs[selected_circuit][i+1]
+        label = tk.Label(input_window, text=temp)
         label.grid(row=i, column=0, padx=10, pady=5)
         entry = tk.Entry(input_window)
         entry.grid(row=i, column=1, padx=10, pady=5)
@@ -217,9 +276,11 @@ def open_input_window(selected_circuit,selected_Type):
         inputs={}
         for i in range(num_inputs):
             temp=""
-            if Circuit_inputs[selected_circuit][i+1]=="VCC" or Circuit_inputs[selected_circuit][i+1]=="VBB":
+            if Circuit_inputs[selected_circuit][i+1]=="VCC" or Circuit_inputs[selected_circuit][i+1]=="VBB" or Circuit_inputs[selected_circuit][i+1]=="VEE":
                 temp=input_entries[i].get()+"V"
             elif Circuit_inputs[selected_circuit][i+1]=="RB" or Circuit_inputs[selected_circuit][i+1]=="RC" or Circuit_inputs[selected_circuit][i+1]=="RE" :
+                temp=input_entries[i].get()+"K ohms"
+            elif Circuit_inputs[selected_circuit][i+1]=="RB1" or Circuit_inputs[selected_circuit][i+1]=="RB2":
                 temp=input_entries[i].get()+"K ohms"
             else :
                 temp=input_entries[i].get()
