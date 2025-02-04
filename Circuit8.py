@@ -134,7 +134,7 @@ def draw_circuit8_PNP_off(d, RB="RB", VCC="VCC", RC="RC", RE="RE"):
 
 
 def Analysis_for_circuit8_NPN(VCC, RE, RB, RC, Beta):
-    IB = (VCC - 0.7) / (Beta + 1 + RB + (Beta + 1) * RE)
+    IB = (VCC - 0.7) / ((Beta + 1) * (RC + RE) + RB)
     kvl1 = "KVL 1: -VCC + (Beta+1) * IB + IB * RB + VBE + (Beta+1)*RE*IB = 0"
     if IB <= 0:
         return (

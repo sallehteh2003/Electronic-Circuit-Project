@@ -14,45 +14,43 @@ import Circuit4  as C6
 import Circuit8  as C7
 import Circuit9  as C8
 from tkinter import simpledialog
-# تابع برای نمایش رسم در Tkinter
+#  این تابع مدار های کشیده شده را تبدیل  می کند به عکس و ان را در محل مورد نظر ما نشان می دهد
 def show_drawing_in_tkinter(drawing, frame_to_display):
-    # ذخیره رسم در حافظه به عنوان تصویر PNG
     buf = io.BytesIO()
-    drawing.save(buf)  # پارامتر format حذف شده است
+    drawing.save(buf)  
     buf.seek(0)
     img = Image.open(buf)
     img_tk = ImageTk.PhotoImage(img)
     
-    # نمایش تصویر در فریم مشخص شده
+    # نمایش تصویر مدار کشیده شده در فریم و جای مشخص شده مشخص شده
     label = tk.Label(frame_to_display, image=img_tk)
-    label.image = img_tk  # نگهداری یک مرجع به تصویر
+    label.image = img_tk  
     label.pack()
 
 
-# تنظیمات Tkinter
+# ساختن یک پنجره گرافیکی برای برنامه
 root = tk.Tk()
-root.title("Circuit Drawer")
+root.title("Circuit Drawer") # اسم پنجره گرافیکی
 root.geometry("900x700")
-root.resizable(False, False)  # ثابت کردن اندازه پنجره
-
-# فریم بالا که به چهار بخش تقسیم می‌شود
+root.resizable(False, False)  #  ثابت کردن اندازه پنجره گرافیکی
+# صفجه باز شده گرافیکی به چهار قسمت تقسیم میشود 
 frame_top = tk.Frame(root)
 frame_top.pack(fill=tk.X, pady=10)
 
-# تقسیم فریم بالا به چهار بخش با استفاده از grid
+#  تنظیمات لازم برای ان 4 قمست که اندازه های ان ها چطوری باشد و چجوری صفحه تقسیم شود
 frame_1 = tk.Frame(frame_top)
-frame_1.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
+frame_1.grid(row=0, column=0, padx=5, pady=5, sticky="nsew") # قسمت اول  برای رسم مدار مورد نظر
 
 frame_2 = tk.Frame(frame_top)
-frame_2.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
+frame_2.grid(row=0, column=1, padx=5, pady=5, sticky="nsew") # قسمت دوم برای رسم مدار معادل بر اساس حالت ترانزیستور
 
 frame_3 = tk.Frame(frame_top)
-frame_3.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
+frame_3.grid(row=1, column=0, padx=5, pady=5, sticky="nsew") # قسمت سوم برای نمایش معادله های مداری kvl and kcl 
 
 frame_4 = tk.Frame(frame_top)
-frame_4.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
+frame_4.grid(row=1, column=1, padx=5, pady=5, sticky="nsew") # قسمت چهارم برای نمایش نتایج تحلیل مدار و مقدار های ساکن 
 
-# تنظیم نسبت ستون‌ها
+# تنظیم جایگاه قرار گیری قسمت ها
 frame_top.grid_columnconfigure(0, weight=1)
 frame_top.grid_columnconfigure(1, weight=1)
 frame_top.grid_rowconfigure(0, weight=1)
@@ -63,11 +61,13 @@ frame_top.grid_rowconfigure(1, weight=1)
 frame = tk.Frame(root)
 frame.pack()
 
+# لیستی از ورودی های تمام مدار ها 
 Circuit_inputs= {"Circuit 1":[5,"VCC","VBB","RB","RC","BETA"],"Circuit 2":[6,"VCC","VBB","RB","RC","RE","BETA"],
                  "Circuit 9":[7,"VEE","VCC","RB1","RC","BETA","RE","RB2"],"Circuit 6":[6,"VCC","RB1","RC","BETA","RE","RB2"],
                  "Circuit 3":[4,"VCC","RB","RC","BETA"],"Circuit 4":[4,"VCC","RB","RC","BETA"],"Circuit 8":[5,"VCC","RB","RC","BETA","RE",],
                  "Circuit 5":[6,"VCC","RB","RC","BETA","RE","VEE"],"Circuit 7":[5,"VCC","RB","RC","BETA","RE"]}
 
+# تابع پاک کردن کل صحفه
 def clean_frames():
     for widget in frame_1.winfo_children():
         widget.destroy()
@@ -78,10 +78,13 @@ def clean_frames():
     for widget in frame_4.winfo_children():
         widget.destroy()
 
+# تابع تحلیل مدار انتخاب شده و رسم مدار معادل ان و نمایش نتایج
 def Analysis_circuit(inputs,selected_circuit,selected_Type):
+    # پاک کردن صحفه
     clean_frames()
     d = schemdraw.Drawing()
     result = {}
+    # نمایش عنوان قسمت ها 
     label = tk.Label(frame_1, text="Circuit", font=("Helvetica", 10,'bold'),fg="red")
     label.pack(padx=10, pady=10)
     label1 = tk.Label(frame_2, text="Circuit with equivalent circuit placement", font=("Helvetica", 10,'bold'),fg="red")
@@ -90,22 +93,31 @@ def Analysis_circuit(inputs,selected_circuit,selected_Type):
     label1.pack(padx=10, pady=10)
     label1 = tk.Label(frame_4, text="Analysis Answer", font=("Helvetica", 10,'bold'),fg="red")
     label1.pack(padx=10, pady=10)
+
+    # رسم مدار معادل و تحلیل مدار انتخاب شده و محاسبه مقدار های ساکن
     if selected_circuit == "Circuit 1":
         if(selected_Type == "NPN"):
+            # رسم مدار با مقدار های ورودی گرفته
             d = C.draw_circuit1_NPN(d,inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VBB"][1])
             show_drawing_in_tkinter(d, frame_1)
+            # صدا زدن تابع تحلیل مدار انتخاب شده 
             result = C.Analysis_for_circuit1_NPN(inputs["VBB"][0],inputs["RB"][0],inputs["BETA"][0],inputs["VCC"][0],inputs["RC"][0])
             d = schemdraw.Drawing()
+            # صدا زدن تابع رسم مدار معادل
             d = result[1](d,inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VBB"][1])
         else:
+             # رسم مدار با مقدار های ورودی گرفته
             d = C.draw_circuit1_PNP(d,inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VBB"][1])
             show_drawing_in_tkinter(d, frame_1)
+            # صدا زدن تابع تحلیل مدار انتخاب شده 
             result = C.Analysis_for_circuit1_PNP(inputs["VBB"][0],inputs["RB"][0],inputs["BETA"][0],inputs["VCC"][0],inputs["RC"][0])
+            # صدا زدن تابع رسم مدار معادل
             d = schemdraw.Drawing()
             d = result[1](d,inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VBB"][1])
 
     elif selected_circuit == "Circuit 2":
         if selected_Type == "NPN":
+                 # رسم مدار با مقدار های ورودی گرفته
                 d = C4.draw_circuit2_NPN(d,inputs["VBB"][1],inputs["RB"][1],inputs["VCC"][1],inputs["RC"][1],inputs["RE"][1])
                 show_drawing_in_tkinter(d, frame_1)
                 result = C4.Analysis_for_circuit2_NPN(inputs["VBB"][0],inputs["RB"][0],inputs["RE"][0],inputs["BETA"][0],inputs["VCC"][0],inputs["RC"][0])
@@ -210,6 +222,8 @@ def Analysis_circuit(inputs,selected_circuit,selected_Type):
                 d = result[1](d,inputs["RB1"][1],inputs["RB2"][1],inputs["VCC"][1],inputs["RC"][1],inputs["VEE"][1],inputs["RE"][1])
     
     show_drawing_in_tkinter(d, frame_2)
+
+    # نمایش نتایج در قسمت چهارم
     text = f"State of BJT : {result[0][0]}\n IB : {result[0][1]} mA\n IC : {result[0][2]} mA\n VCE (NPN) or VEC (PNP) : {result[0][3]} V\n"
     label = tk.Label(frame_4, text=text, font=("Helvetica", 10))
     label.pack(padx=10, pady=10)
@@ -272,10 +286,10 @@ def draw_circuit(selected_circuit,selected_Type):
             d = C1.draw_circuit10_PNP(d)
     show_drawing_in_tkinter(d, frame_1)
     
-def open_input_window(selected_circuit,selected_Type):
+# تابع گرفتن ورودی از کاربر بر اساس مدار انتخاب شده
+def Enter_input_from_User(selected_circuit,selected_Type):
     # ایجاد یک پنجره جدید
     input_window = tk.Toplevel(root)
-    # از کاربر می‌خواهیم که تعداد ورودی‌ها را وارد کند
     num_inputs = Circuit_inputs[selected_circuit][0]
     # لیستی برای ذخیره ورودی‌ها
     input_entries = []
@@ -298,7 +312,7 @@ def open_input_window(selected_circuit,selected_Type):
         input_entries.append(entry)
         
     
-    # دکمه برای ارسال ورودی‌ها
+    # تابع برای گرفتن نتایج از ورودی ها و بستن پنجره ورودی ها
     def submit_inputs():
         inputs={}
         for i in range(num_inputs):
@@ -337,11 +351,11 @@ selected_option1.set(Types[0])  # پیش‌فرض اولین گزینه
 bottom_frame = tk.Frame(root, bg="lightgray")
 bottom_frame.pack(side=tk.BOTTOM, fill=tk.X, padx=10, pady=10)
 
-# منوی کشویی برای انتخاب مدار
+# منو  برای انتخاب نوع  مدار
 dropdown_menu = ttk.Combobox(bottom_frame, textvariable=selected_option1, values=Types, font=button_font,state="readonly")
 dropdown_menu.set("Select Type of BJT")  # تنظیم مقدار پیش‌فرض
 dropdown_menu.pack(side=tk.LEFT, padx=10, pady=10)
-
+# منو برای انتخاب مدار
 dropdown_menu = ttk.Combobox(bottom_frame, textvariable=selected_option, values=options, font=button_font,state="readonly" )
 dropdown_menu.set("Select Circuit")  # تنظیم مقدار پیش‌فرض
 dropdown_menu.pack(side=tk.LEFT, padx=10, pady=10)
@@ -351,7 +365,8 @@ draw_button = tk.Button(bottom_frame, text="Draw Selected Circuit", command=lamb
 draw_button.config(font=button_font, bg="green", fg="white", padx=15, pady=10, relief="raised", bd=3)
 draw_button.pack(side=tk.RIGHT, padx=10, pady=10)
 
-draw_button = tk.Button(bottom_frame, text="Enter inputs", command=lambda: open_input_window(selected_option.get(),selected_option1.get()))
+# دکمه برای باز کردن پنجره ورودی گرفتن از کاربر
+draw_button = tk.Button(bottom_frame, text="Enter inputs", command=lambda: Enter_input_from_User(selected_option.get(),selected_option1.get()))
 draw_button.config(font=button_font, bg="red", fg="white", padx=15, pady=10, relief="raised", bd=3)
 draw_button.pack(side=tk.TOP, padx=10, pady=10)
 
