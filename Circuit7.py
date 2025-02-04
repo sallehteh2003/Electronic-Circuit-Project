@@ -204,6 +204,7 @@ def Analysis_for_circuit7_NPN(RB2,RB1,VCC,RC,RE,BETA):
         VCE = VCC - (IC * ( RC + ((BETA+1) / BETA *RE)))
         if VCE > 0.2 :
             TEMP = "KVL 1: -VTH + (RTH)*IB + VBE(ACTIVE) + RE * (BETA + 1) * IB = 0 \n KVL 2: -VCC + RC * IC + VCE + RE * (BETA + 1/ BETA) = 0 \n IC = BETA * IB"
+            TEMP +=f"\n VTH={VTH} \n RTH={RTH}"
             return((("Active",IB,IC,VCE),draw_circuit7_NPN_ACTIVE,TEMP))
         else:
             IC, IB = symbols('IC IB')
@@ -211,23 +212,26 @@ def Analysis_for_circuit7_NPN(RB2,RB1,VCC,RC,RE,BETA):
             eq2 = Eq( -VCC + IC * RC + 0.2 + RE * (IC + IB) , 0 )
             solution = solve((eq1, eq2), (IC ,IB))
             TEMP = "KVL 1: -VTH + (RTH)*IB + VBE(sat) + RE * IE = 0 \n KVL 2: -VCC + IC *RC + VCE(SAT) + IE * RE   \n IE = IC + IB"
+            TEMP +=f"\n VTH={VTH} \n RTH={RTH}"
             return((("Sat",solution[IC],solution[IB],0.2),draw_circuit7_NPN_SAT,TEMP))
 
-def Analysis_for_circuit7_PNP(RB2,RB1,VEE,VCC,RC,RE,BETA):
+def Analysis_for_circuit7_PNP(RB2,RB1,VCC,RC,RE,BETA):
         VTH = (RB2/(RB1+RB2))* (-1 * VCC)
         RTH = (RB1*RB2)/(RB1+RB2)
-        IB = (VTH-0.7)/(RTH+((BETA+1)*RE))
+        IB = (-VTH-0.7)/(RTH+((BETA+1)*RE))
         if IB <= 0 :
             return((("off",0,0,VCC),draw_circuit7_NPN_OFF,"KVL 1: -VBB + (RB)*IB + VBE(ACTIVE) = 0"))
         IC = BETA * IB
         VEC = VCC -  (IC * ( RC + ((BETA+1) / BETA *RE)))
         if VEC > 0.2 :
             TEMP = "KVL 1: -VTH + (RTH)*IB + VBE(ACTIVE) + RE * (BETA + 1) * IB = 0 \n KVL 2: -VCC + RC * IC + VCE + RE * (BETA + 1/ BETA)  = 0 \n IC = BETA * IB"
+            TEMP +=f"\n VTH={VTH} \n RTH={RTH}"
             return((("Active",IB,IC,VEC),draw_circuit7_NPN_ACTIVE,TEMP))
         else:
             IC, IB = symbols('IC IB')
-            eq1 = Eq( -VTH + RTH * IB + 0.8 + (IC + IB) * RE , 0 )
+            eq1 = Eq( +VTH + RTH * IB + 0.8 + (IC + IB) * RE , 0 )
             eq2 = Eq( -VCC + IC * RC + 0.2 + RE * (IC + IB) , 0 )
             solution = solve((eq1, eq2), (IC ,IB))
             TEMP = "KVL 1: -VTH + (RTH)*IB + VBE(sat) + RE * IE = 0 \n KVL 2: -VCC + IC *RC + VCE(SAT) + IE * RE   \n IE = IC + IB"
+            TEMP +=f"\n VTH={VTH} \n RTH={RTH}"
             return((("Sat",solution[IC],solution[IB],0.2),draw_circuit7_NPN_SAT,TEMP))
